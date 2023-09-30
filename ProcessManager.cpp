@@ -30,7 +30,7 @@ ProcessManager::~ProcessManager()
 #ifdef _WIN32
     if (hSnapShot != INVALID_HANDLE_VALUE)
     {
-        CloseHandle(hSnapShot);
+	CloseHandle(hSnapShot);
     }
 #endif
 }
@@ -93,10 +93,7 @@ pid_t ProcessManager::getPidByName(const std::string& procName)
     {
         long lpid = strtol(ent->d_name, &endptr, 10);
 
-        if (*endptr != '\0')
-        {
-            continue;
-        }
+        if (*endptr != '\0') continue;
 
         snprintf(buf, sizeof(buf), "/proc/%ld/cmdline", lpid);
         FILE* fp = fopen(buf, "r");
@@ -155,8 +152,6 @@ void ProcessManager::killProcessByName(const std::string& procName)
 void ProcessManager::suspendProcessById(pid_t pid)
 {
 #ifdef _WIN32
-    // Windows implementation for suspending a process by its ID
-    // This is a bit more complex and might require enumerating threads and suspending them.
     throw std::runtime_error("Suspend process not implemented for Windows.");
 #else
     if (kill(pid, SIGSTOP) != 0)
@@ -169,8 +164,6 @@ void ProcessManager::suspendProcessById(pid_t pid)
 void ProcessManager::resumeProcessById(pid_t pid)
 {
 #ifdef _WIN32
-    // Windows implementation for resuming a process by its ID
-    // This is a bit more complex and might require enumerating threads and resuming them.
     throw std::runtime_error("Resume process not implemented for Windows.");
 #else
     if (kill(pid, SIGCONT) != 0)
